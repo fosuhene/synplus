@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use App\Models\Category;
 
 class CategoryController extends Controller
 {
@@ -14,6 +16,23 @@ class CategoryController extends Controller
     public function index()
     {
         //
+         //passing categories from db
+         $categories = Category::orderBy('id', 'DESC')->get();
+         return view('backend.category.index', compact('categories'));
+    }
+
+    public function categoryStatus(Request $request){
+        //dd($request->all());
+
+        if($request->mode == 'true'){
+            DB::table('categories')->where('id', $request->id)->update(['status' => 'active']);
+            return response()->json(['msg' => 'Status changed to active', 'status' => true]);
+        }else{
+            DB::table('categories')->where('id', $request->id)->update(['status' => 'inactive']);
+            return response()->json(['msg' => 'Status changed to inactive', 'status' => true]);
+        }
+
+        
     }
 
     /**
@@ -24,6 +43,7 @@ class CategoryController extends Controller
     public function create()
     {
         //
+        return view('backend.category.create');
     }
 
     /**
@@ -35,6 +55,36 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //
+         //$request
+         $this->validate($request, [
+            'title' => 'string|required',
+            'photo' => 'required',
+            'is_parent' => 'integer|nullable',            
+            'summary' => 'string|nullable',
+            'parent_id' => 'integer|nullable',               
+            'status' => 'string|required',
+        ]);
+
+        $data = $request->all();
+
+        $slug = Str::slug($request->input('title'));
+        $slug_count = Category::where('slug', $slug)->count();
+
+        if($slug_count > 0){
+            $slug .= time(). '-'.$slug;
+        }
+
+        $data['slug'] = $slug;
+
+       // return $data; 
+
+        $status = Category::create($data);
+        if($status){
+            return redirect()->route('category.index')->with('success', 'Successfully created category.');
+        }else{
+            return back()-with('error', 'Something went wrong!');
+        }
+       
     }
 
     /**
@@ -57,6 +107,12 @@ class CategoryController extends Controller
     public function edit($id)
     {
         //
+        $category = Category::find($id);
+        if($category){
+            return view('backend.category.edit', compact('category'));
+        }else{
+            return back()->with('error', 'Data not found');
+        }
     }
 
     /**
@@ -69,6 +125,29 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $category = Category::find($id);
+        if($category){
+           
+            //$request
+       $this->validate($request, [
+           'title' => 'string|required',
+           'summary' => 'string|nullable',
+           'photo' => 'required',  
+       ]);
+
+       $data = $request->all();
+
+      
+       $status = $category->fill($data)->save();
+       if($status){
+           return redirect()->route('category.index')->with('success', 'Successfully updated category.');
+       }else{
+           return back()-with('error', 'Something went wrong!');
+       }
+      
+        }else{
+            return back()->with('error', 'Data not found');
+        }
     }
 
     /**
@@ -80,5 +159,17 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         //
+        $category = Category::find($id);
+        if($category){
+            $status = $category->delete();
+            if($status){
+               return redirect()->route('category.index')->with('success', 'Category successfully deleted');
+            }else{
+                return back()->with('error', 'something went wrong');
+            }
+            
+        }else{
+            return back()->with('error', 'Data not found');
+        }
     }
 }

@@ -23,7 +23,7 @@ class CategoryFactory extends Factory
     {
         return [
             //
-            'title' => $this->faker->title,
+            'title' => $this->faker->text,
             'slug' => $this->faker->unique()->slug,
             'summary' => $this->faker->sentences(3, true),
             'photo' => $this->faker->imageUrl('100', '100'),

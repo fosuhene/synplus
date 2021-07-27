@@ -17,7 +17,8 @@
     <!-- plugins:js -->
     <script src="{{asset('backend/assets/vendors/js/vendor.bundle.base.js')}}"></script>
     <!-- endinject -->
-    <script src="{{asset('backend/assets/bootstrap5/bootstrap.bundle.min.js')}}"></script>
+    <!--script src="asset('backend/assets/bootstrap5/bootstrap.bundle.min.js')}}"></script-->
+    <script src="{{asset('https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js')}}"></script>
 
     <!-- Plugin js for this page -->
     <script src="{{asset('backend/assets/vendors/chart.js/Chart.min.js')}}"></script>
@@ -27,7 +28,7 @@
 
     <script src="{{asset('https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js')}}"></script>  
     <script src="{{asset('https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js')}}"></script>
-    <script src="{{asset('https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js')}}"></script>
 
     <!--script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 

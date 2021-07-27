@@ -8,44 +8,40 @@
       <div class="card-body">
         <p>
            <a href="{{route('admin')}}"> <i class="fa fa-arrow-circle-o-left" aria-hidden="true"> Back</i></a>
-            <h4 class="card-title">Category List <a href="{{route('category.create')}}" class="btn btn-sm btn-outline-primary"><i class="fa fa-plus-circle"></i> Create Category </a><span class="badge bg-primary pull-right" style="background:#4B49AC!important">Total Categories: {{\App\Models\Category::count()}}</span></h4>
+            <h4 class="card-title">Brand List <a href="{{route('brand.create')}}" class="btn btn-sm btn-outline-primary"><i class="fa fa-plus-circle"></i> Create Brand </a><span class="badge bg-primary pull-right" style="background:#4B49AC!important">Total Brands: {{\App\Models\Brand::count()}}</span></h4>
             
         </p>        
           @include('backend.layouts.notification')
         <div class="table-responsive">
-          <table class="table table-striped display" id="categorytbl" style="width:100%">
-            <thead>
+          <table class="table table-striped" id="brandtbl" style="width:100%">
+            <thead class="table-dark">
               <tr>
                 <th>No.</th>
                 <th>Photo</th>
-                <th>Title</th>
-                <th>Summary</th>
-                <th>Is Parent</th>
-                <th>Parents</th>
+                <th>Title</th>                
+                <th>Description</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              @foreach ($categories as $category)
+              @foreach ($brands as $brand)
               <tr>
                 <td> {{$loop->iteration}} </td>
                 <td class="py-1">
-                  <img src="{{$category->photo}}" alt="{{$category->title}}" title="{{$category->title}}" style="max-height:90px; max-width: 120px"/>
+                  <img src="{{$brand->photo}}" alt="{{$brand->title}}" title="{{$brand->title}}" style="max-height:90px; max-width: 120px"/>
                 </td>
-                <td>{!! html_entity_decode(substr($category->title, 0, 50))!!}</td>
-                <td>{!! html_entity_decode(substr($category->summary, 0, 10))!!}</td>  
-                <td>{{$category->is_parent === 1 ? 'Yes' : 'No'}}</td>
-                <td>{{\App\Models\Category::where('id', $category->parent_id)->value('title')}}</td>             
+                <td>{!! html_entity_decode(substr($brand->title, 0, 50))!!}</td>
+                <td>{!! html_entity_decode(substr($brand->description, 0, 30))!!}</td>
                 <td>
-                  <input type="checkbox" data-toggle="switchbutton" name="toggle" value="{{$category->id}}" {{$category->status == 'active' ? 'checked' : ''}} data-onlabel="active" data-offlabel="inactive" data-size="sm" data-onstyle="success" data-offstyle="danger">
+                  <input type="checkbox" data-toggle="switchbutton" name="toggle" value="{{$brand->id}}" {{$brand->status == 'active' ? 'checked' : ''}} data-onlabel="active" data-offlabel="inactive" data-size="sm" data-onstyle="success" data-offstyle="danger">
                 </td>
                 <td>
-                  <a href="{{route('category.edit', $category->id)}}" data-toggle="tooltip" title="edit" class="float-left btn btn-outline-warning btn-sm"  data-placement="bottom"><i class="fa fa-edit"></i></a>
-                  <form class="float-left ml-1" action="{{route('category.destroy', $category->id)}}" method="post">
+                  <a href="{{route('brand.edit', $brand->id)}}" data-toggle="tooltip" title="edit" class="float-left btn btn-outline-warning btn-sm"  data-placement="bottom"><i class="fa fa-edit"></i></a>
+                  <form class="float-left ml-1" action="{{route('brand.destroy', $brand->id)}}" method="post">
                       @csrf
                       @method('delete')
-                     <a href="" data-toggle="tooltip" title="delete"  data-id = "{{$category->id}}" class="dlbtn btn btn-outline-danger btn-sm"  data-placement="bottom"><i class="fa fa-trash"></i></a>
+                     <a href="" data-toggle="tooltip" title="delete"  data-id = "{{$brand->id}}" class="dlbtn btn btn-outline-danger btn-sm"  data-placement="bottom"><i class="fa fa-trash"></i></a>
                   </form>
                 </td>
               </tr>
@@ -73,7 +69,7 @@
         e.preventDefault();
           swal({
               title: "Are you sure?",
-              text: "Once deleted, you will not be able to recover this record",
+              text: "Once deleted, you will not be able to recover this record!",
               icon: "warning",
               buttons: true,
               dangerMode: true,
@@ -99,7 +95,7 @@
      //alert(mode)
      //ajax to control update mechanism
      $.ajax({
-        url:"{{route('category.status')}}",
+        url:"{{route('brand.status')}}",
         type:"POST",
         data:{
             _token:'{{csrf_token()}}',
@@ -133,8 +129,8 @@
    });
  </script>
  <script>
-  $(document).ready( function () {
-      $('#categorytbl').DataTable();
-  } );
+    $(document).ready( function () {
+        $('#brandtbl').DataTable();
+    } );
 </script>
 @endsection

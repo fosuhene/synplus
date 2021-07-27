@@ -13,7 +13,7 @@
         </p>        
           @include('backend.layouts.notification')
         <div class="table-responsive">
-          <table class="table table-striped">
+          <table class="table table-striped display" id="bannertbl" style="width:100%">
             <thead>
               <tr>
                 <th>No.</th>
@@ -136,4 +136,9 @@
      });
    });
  </script>
+ <script>
+  $(document).ready( function () {
+      $('#bannerbl').DataTable();
+  } );
+</script>
 @endsection

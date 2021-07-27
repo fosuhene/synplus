@@ -39,30 +39,32 @@
                 <textarea class="form-control" id="summary" placeholder="Description" name="summary">{{$category->summary}}</textarea>
               </div>
 
-              <div class="row">
-                <div class="form-group col-md-6">
-                  <label for="exampleInputPassword1">Upload Photo</label>
-                    <div class="input-group">
-                      <span class="input-group-btn">
-                        <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary btn-xs">
-                          <i class="fa fa-picture-o"></i> Choose
-                        </a>
-                      </span>
-                      <input id="thumbnail" class="form-control input-sm" type="text" name="photo" id="photo" value="{{$category->photo}}">
-                    </div>
-                   <div id="holder" style="margin-top:15px;max-height:100px;"></div>
-                </div>
-
-              <div class="form-group col-md-6">
-                <label for="">Is Parent <span class="text-danger">*</span></label>
-                  <select name="is_parent" class="form-control show-tick text-black">
-                    <option value="">choose...</option>
-                    <option value="1" {{$category->is_parent == '1' ? 'selected' : ''}}>Yes</option>
-                    <option value="0" {{$category->is_parent == '0' ? 'selected' : ''}}>No</option>
+                <div class="form-group">
+                  <label for="">Is Parent </label>
+                  <input id = "is_parent" type="checkbox" value="{{$category->is_parent}}" name="is_parent" {{$category->is_parent == 1 ? 'checked' : ''}}> Yes 
+              </div>
+              <div class="form-group d-none" {{$category->is_parent == 1 ? : 'd-none'}} id="parent_cat_div">
+                <label for="">Parent Category </label>
+                  <select name="parent_id" class="form-control show-tick input-sm text-black">
+                    <option value="">Please choose...</option>
+                     @foreach ($parent_cats as $pcats)
+                       <option value="{{$pcats->id}}" {{$pcats->id == $category->is_parent ? 'selected' : ''}}>{{$pcats->title}}</option>
+                     @endforeach
                   </select>
               </div>
-            </div>
-              <button type="submit" class="btn btn-primary mr-2"><i class="ti-pencil-alt"></i> Update</button>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Upload Photo</label>
+                  <div class="input-group">
+                    <span class="input-group-btn">
+                      <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary btn-xs">
+                        <i class="fa fa-picture-o"></i> Choose
+                      </a>
+                    </span>
+                    <input id="thumbnail" class="form-control input-sm" type="text" name="photo" id="photo" value="{{$category->photo}}">
+                  </div>
+                 <div id="holder" style="margin-top:15px;max-height:100px;"></div>
+              </div>
+              <button type="submit" class="btn btn-success mr-2"><i class="ti-pencil-alt"></i> Update</button>
               <button class="btn btn-danger"> <i class="ti-close"></i> Cancel</button>
             </form>
           </div>
@@ -84,15 +86,32 @@
  </script>
 
 
-   {{---Summernote---}}
+   {{---ckeditor---}}
    <script src="{{asset('backend/assets/ckeditor/ckeditor.js')}}"></script>
-     <script>
-        $(document).ready(function() {
-          CKEDITOR.replace( 'summary',
-          {
-            customConfig : 'config.js',
-            toolbar : 'simple'
-          })   
-       });
-    </script>
+   <script>
+    $(document).ready(function() {
+      CKEDITOR.replace( 'summary',
+      {
+        customConfig : 'config.js',
+        toolbar : 'simple'
+      })  
+      
+
+      $('#is_parent').change(function(e){
+      e.preventDefault();
+      var is_checked = $('#is_parent').prop('checked');
+      //alert(is_checked);
+
+      if(is_checked){
+        $('#parent_cat_div').addClass('d-none');
+        $('#parent_cat_div').val();
+      }else{
+        $('#parent_cat_div').removeClass('d-none');
+
+      }
+   });
+
+      
+   });
+</script>
  @endsection

@@ -27,8 +27,21 @@
         </a>
         <div class="collapse" id="nav_category">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="{{route('category.index')}}">All Category</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{route('category.index')}}">All Categories</a></li>
             <li class="nav-item"> <a class="nav-link" href="{{route('category.create')}}">Add Category</a></li>
+           </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#nav_brand" aria-expanded="false" aria-controls="nav_brand">
+          <i class="ti-layers-alt menu-icon"></i>
+          <span class="menu-title">Brand</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="nav_brand">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{route('brand.index')}}">All Brands</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{route('brand.create')}}">Add Brand</a></li>
            </ul>
         </div>
       </li>

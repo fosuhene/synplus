@@ -11,16 +11,15 @@
   
   <link rel="stylesheet" href="{{asset('backend/assets/css/vertical-layout-light/style.css')}}">
   
-  <link rel="stylesheet" href="{{asset('backend/assets/bootstrap5//bootstrap.min.css')}}">
+  <!--link rel="stylesheet" href="asset('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')}}"-->
+  <link rel="stylesheet" href="{{asset('https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css')}}">
+  <!--link rel="stylesheet" href="asset('backend/assets/bootstrap5//bootstrap.min.css')}}"-->
   <link rel="stylesheet" href="{{asset('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')}}">
 
   <link rel="stylesheet" href="{{asset('backend/assets/vendors/switch-button-bootstrap/css/bootstrap-switch-button.css')}}"/>
+  <link rel="stylesheet" href="{{asset('https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css')}}">
   <!-- Plugin css for this page -->
-  <!--link rel="stylesheet" href="asset('backend/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}">
-  <link rel="stylesheet" type="text/css" href="asset('backend/assets/js/select.dataTables.min.css')}}"-->
-
-  <link rel="stylesheet" href="{{asset('https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css')}}">
-  <link rel="stylesheet" href="{{asset('https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css')}}">
+ 
   <!-- End plugin css for this page -->
   <!-- inject:css -->
   <!-- endinject -->

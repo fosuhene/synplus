@@ -52,7 +52,7 @@ class ProductFactory extends Factory
             'markup_price' => $this->faker->randomDigit,            
             'discount' => $this->faker->randomDigit,
             'no' => Str::random(10),
-            'item_size' => $this->faker->randomElement(['S','M','L']),
+            'item_size' => $this->faker->randomElement(['S','M','L','XL']),
             'color' => $this->faker->hexcolor,
             'entry_date' => $this->faker->date(),            
             'date_of_manufacture' => $this->faker->dateTimeBetween('-1 years', $stdate),

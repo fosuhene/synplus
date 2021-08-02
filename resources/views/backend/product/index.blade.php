@@ -8,48 +8,50 @@
       <div class="card-body">
         <p>
            <a href="{{route('admin')}}"> <i class="fa fa-arrow-circle-o-left" aria-hidden="true"> Back</i></a>
-            <h4 class="card-title">Banner List <a href="{{route('banner.create')}}" class="btn btn-sm btn-outline-primary"><i class="fa fa-plus-circle"></i> Create Banner </a><span class="badge bg-primary pull-right" style="background:#4B49AC!important">Total Banners: {{\App\Models\Banner::count()}}</span></h4>
+            <h4 class="card-title">Product List <a href="{{route('product.create')}}" class="btn btn-sm btn-outline-primary"><i class="fa fa-plus-circle"></i> Create Product </a><span class="badge bg-primary pull-right" style="background:#4B49AC!important">Total Products: {{\App\Models\Product::count()}}</span></h4>
             
         </p>        
           @include('backend.layouts.notification')
         <div class="table-responsive">
-          <table class="table table-striped display" id="bannertbl" style="width:100%">
+          <table class="table table-striped display" id="productbl" style="width:100%">
             <thead>
               <tr>
                 <th>No.</th>
-                <th>Photo</th>
-                <th>Title</th>
-                <th>Description</th>
+                <th>Product Name</th>                
+                <th>Photo</th>                
+                <th>Price</th>                
+                <th>Discount</th>
+                <th>Size</th>
                 <th>Condition</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              @foreach ($banners as $banner)
+              @foreach ($products as $product)
               <tr>
-                <td> {{$loop->iteration}} </td>
-                <td class="py-1">
-                  <img src="{{$banner->photo}}" alt="{{$banner->title}}" title="{{$banner->title}}" style="max-height:90px; max-width: 120px"/>
-                </td>
-                <td>{{$banner->title}}</td>
-                <td>{!! html_entity_decode(substr($banner->description, 0, 10))!!}</td>
+                 <td> {{$loop->iteration}} </td>                
+                 <td>{{$product->name}}</td>
+                  <td> <img src="{{$product->photo}}" alt="{{$product->name}}" title="{{$product->name}}" class="w-100 shadow-1-strong rounded mb-4"/></td>
+                  <td>GHS {{number_format($product->cost_price + $product->markup_price, 2)}}</td>
+                  <td>GHS {{number_format($product->discount, 2)}}</td>
+                  <td>{{$product->item_size}}</td>
                 <td>
-                  @if ($banner->conditions == 'banner')
-                    <span class="badge badge-success">{{$banner->conditions}}</span>
+                  @if ($product->conditions == 'new')
+                    <span class="badge badge-success">{{$product->conditions}}</span>
                     @else
-                    <span class="badge badge-primary">{{$banner->conditions}}</span>
+                    <span class="badge badge-primary">{{$product->conditions}}</span>
                   @endif
                 </td>
                 <td>
-                  <input type="checkbox" data-toggle="switchbutton" name="toggle" value="{{$banner->id}}" {{$banner->status == 'active' ? 'checked' : ''}} data-onlabel="active" data-offlabel="inactive" data-size="sm" data-onstyle="success" data-offstyle="danger">
+                  <input type="checkbox" data-toggle="switchbutton" name="toggle" value="{{$product->id}}" {{$product->status == 'active' ? 'checked' : ''}} data-onlabel="active" data-offlabel="inactive" data-size="sm" data-onstyle="success" data-offstyle="danger">
                 </td>
                 <td>
-                  <a href="{{route('banner.edit', $banner->id)}}" data-toggle="tooltip" title="edit" class="float-left btn btn-outline-warning btn-sm"  data-placement="bottom"><i class="fa fa-edit"></i></a>
-                  <form class="float-left ml-1" action="{{route('banner.destroy', $banner->id)}}" method="post">
+                  <a href="{{route('product.edit', $product->id)}}" data-toggle="tooltip" title="edit" class="float-left btn btn-outline-warning btn-sm"  data-placement="bottom"><i class="fa fa-edit"></i></a>
+                  <form class="float-left ml-1" action="{{route('product.destroy', $product->id)}}" method="post">
                       @csrf
                       @method('delete')
-                     <a href="" data-toggle="tooltip" title="delete"  data-id = "{{$banner->id}}" class="dlbtn btn btn-outline-danger btn-sm"  data-placement="bottom"><i class="fa fa-trash"></i></a>
+                     <a href="" data-toggle="tooltip" title="delete"  data-id = "{{$product->id}}" class="dlbtn btn btn-outline-danger btn-sm"  data-placement="bottom"><i class="fa fa-trash"></i></a>
                   </form>
                 </td>
               </tr>
@@ -103,7 +105,7 @@
      //alert(mode)
      //ajax to control update mechanism
      $.ajax({
-        url:"{{route('banner.status')}}",
+        url:"{{route('product.status')}}",
         type:"POST",
         data:{
             _token:'{{csrf_token()}}',
@@ -138,7 +140,7 @@
  </script>
  <script>
   $(document).ready( function () {
-      $('#bannerbl').DataTable();
+      $('#productbl').DataTable();
   } );
 </script>
 @endsection

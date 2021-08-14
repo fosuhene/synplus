@@ -39,6 +39,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
    Route::resource('/category', CategoryController::class);
    Route::post('category_status', [\App\Http\Controllers\CategoryController::class, 'categoryStatus'])->name('category.status');
 
+    Route::post('category/{id}/child', [\App\Http\Controllers\CategoryController::class, 'getChildByParentID']);
+
         //brand section
     Route::resource('/brand', BrandController::class);
     Route::post('brand_status', [\App\Http\Controllers\BrandController::class, 'brandStatus'])->name('brand.status');

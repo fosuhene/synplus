@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -51,11 +52,29 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         //
-         //$request
+        //return $request->all();
+        //currently logged user
+        $user = Auth::user();
+        $uid = Auth::id();
+
          $this->validate($request, [
             'name' => 'string|required',
+            'summary' => 'string|required',
             'description' => 'string|nullable',
-            'photo' => 'required',              
+            'available_qty' => 'nullable|numeric',
+            'cost_price' => 'nullable|numeric',
+            'markup_price' => 'nullable|numeric',
+            'unit_cost' => 'nullable|numeric',
+            'unit_price' => 'nullable|numeric',
+            'photo' => 'required',  
+            'brand_id' => 'nullable|exists:brands,id',
+            'cat_id' => 'required|exists:categories,id',
+            'child_cat_id' => 'nullable|exists:categories,id',
+            'item_size' => 'string|nullable',
+            'status' => 'string|nullable',
+            'conditions' => 'string|nullable',
+            'vendor_id' => 'required|exists:users,id',
+            'umeasure_id ' => 'nullable|exists:munits,id',           
             'conditions' => 'string|required',            
             'status' => 'string|required',
         ]);
@@ -71,13 +90,29 @@ class ProductController extends Controller
 
         $data['slug'] = $slug;
 
+        $offerPrice1 = $request->cost_price + $request->markup_price;
+        
+
+
+        if($request->discount > 0){
+            $discountPercentange = $request->discount / 100;
+            $discountMargin = $offerPrice1 * $discountPercentange;
+
+            $offerPrice = $offerPrice1 - $discountMargin;
+        }else{
+            $offerPrice = $offerPrice1;
+        }
+
+        $data['offer_price'] = $offerPrice;
+        $data['entered_by'] = $uid;
+       
        // return $data; 
 
         $status = Product::create($data);
         if($status){
             return redirect()->route('product.index')->with('success', 'Successfully created product.');
         }else{
-            return back()-with('error', 'Something went wrong!');
+            return back()-with('error', 'something went wrong!');
         }
        
     }
@@ -91,6 +126,14 @@ class ProductController extends Controller
     public function show($id)
     {
         //
+        /*
+        $product = Product::find($id);
+        if($product){
+            return view('backend.product.view', compact(['product']));
+        }else{
+            return back()->with('error', 'Product not found');
+        }
+        */
     }
 
     /**
@@ -106,7 +149,7 @@ class ProductController extends Controller
         if($product){
             return view('backend.product.edit', compact('product'));
         }else{
-            return back()->with('error', 'Data not found');
+            return back()->with('error', 'Product not found');
         }
     }
 

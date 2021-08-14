@@ -90,7 +90,7 @@
                 <label for="exampleInputUsername1">Stock<span class="text-danger">*</span>
                   <i data-toggle="tooltip" title="How many of this product you have in store" class="fa fa-info-circle"></i>
                 </label>
-                <input type="text" class="form-control" id="stock" value="{{old('stock')}}" placeholder="Stock" name="stock">
+                <input type="text" step="any" class="form-control" id="available_qty" value="{{old('available_qty')}}" placeholder="Stock" name="available_qty">
               </div>
               <div class="row">
                 <div class="form-group col-md-6 col-sm-6 col-lg-6">
@@ -120,6 +120,12 @@
                 <input type="text" step="any" class="form-control" id="unit_price" value="{{old('unit_price')}}" placeholder="Unit Price" name="unit_price">
               </div>
             </div> 
+            <div class="form-group">
+              <label for="exampleInputUsername1">Discount<span class="text-danger">*</span>
+                <i data-toggle="tooltip" title="How much discount do you want to give on this product?. It should be a percentage value. E.g: 2" class="fa fa-info-circle"></i>
+              </label>
+              <input type="text" step="any" class="form-control" id="discount" value="{{old('discount')}}" placeholder="Eg: 2" name="discount">
+            </div>
           </div>
         </div>
       </div>
@@ -183,7 +189,7 @@
                   <select name="brand_id" id="brand_id" class="form-control show-tick  text-black">
                     <option value="">-- Brands --</option>
                     @foreach (\App\Models\Brand::get() as $brand )
-                    <option value="">{{$brand->title}}</option>
+                    <option value="{{$brand->id}}">{{$brand->title}}</option>
                     @endforeach
                   </select>
               </div>
@@ -191,13 +197,31 @@
                 <label for="">Category <span class="text-danger">*</span></label>
                   <select name="cat_id" id="cat_id"  class="form-control show-tick text-black">
                     <option value="">-- Categories --</option>
-                    @foreach (\App\Models\Category::get() as $cat )
-                    <option value="">{{$cat->title}}</option>
+                    @foreach (\App\Models\Category::where('is_parent', 1)->get() as $cat )
+                    <option value="{{$cat->id}}">{{$cat->title}}</option>
                     @endforeach
                   </select>
               </div>
             </div>
-            
+            <div class="row form-group">
+              <div class="form-group col-md-6 d-none" id="child_cat_div">
+                <label for="">Child Category <span class="text-danger">*</span></label>
+                  <select name="child_cat_id" id="child_cat_id"  class="form-control show-tick text-black">
+                  </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="">Size <span class="text-danger">*</span></label>
+                  <select name="item_size" id="item_size"  class="form-control show-tick text-black">
+                    <option value="">-- Size --</option>
+                    <option value="S" {{old('size') == 'S' ? 'selected' : ''}}>S</option>
+                    <option value="M" {{old('size') == 'M' ? 'selected' : ''}}>M</option>
+                    <option value="L" {{old('size') == 'L' ? 'selected' : ''}}>L</option>
+                    <option value="XL" {{old('size') == 'XL' ? 'selected' : ''}}>XL</option>
+                    <option value="XXL" {{old('size') == 'XXL' ? 'selected' : ''}}>XXL</option>
+                  </select>
+              </div>
+             
+            </div>
           </div>
         </div>
       </div>
@@ -242,6 +266,48 @@
         </div>
       </div>
       <!-- Accordion card -->
+
+         <!-- Accordion card -->
+         <div class="card">
+  
+          <!-- Card header -->
+          <div class="card-header" role="tab" id="headingThree">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordionVen" href="#accordionVen"
+              aria-expanded="false" aria-controls="accordionVen">
+              <h5 class="mb-0">
+                Product Vendor
+                <i class="fa fa-circle-o-notch"></i>
+              </h5>
+            </a>
+          </div>
+    
+          <!-- Card body -->
+          <div id="accordionVen" class="collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="card-body">
+              <div class="row"> 
+                  <div class="form-group">
+                    <label for="">Vendor </label>
+                      <select name="vendor_id" id="vendor_id" class="form-control show-tick  text-black">
+                        <option value="">-- Vendor--</option>
+                        @foreach (\App\Models\User::where('role', 'vendor')->get() as $vendor )
+                        <option value="{{$vendor->id}}">{{$vendor->full_name}}</option>
+                        @endforeach
+                      </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="">Unit Measure </label>
+                      <select name="umeasure_id" id="umeasure_id" class="form-control show-tick  text-black">
+                        <option value="">-- Unit Measure--</option>
+                        @foreach (\App\Models\Munit::get() as $munit )
+                        <option value="{{$munit->id}}">{{$munit->umeasure}}</option>
+                        @endforeach
+                      </select>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </div>
     </div>
     <!--/.Accordion wrapper-->
   
@@ -288,5 +354,46 @@
           }) 
           */   
        });
+    </script>
+    <script>
+      $('#cat_id').change(function(){
+        var cat_id = $(this).val();
+        //alert(cat_id);
+        //console.log(cat_id);
+        if(cat_id != null){
+           $.ajax({
+              url:"/admin/category/"+cat_id+"/child",
+              type:"POST",
+              data:{
+                _token:"{{csrf_token()}}",
+                cat_id:cat_id,
+              },
+              success:function(response){
+                var html_option = "<option value=''>----Child Category---</option>";
+                //console.log(response);
+                if(response.status){
+                   $('#child_cat_div').removeClass('d-none');
+                   $.each(response.data, function(id, title){
+                      html_option += "<option value='"+ id +"'>"+ title +"</option>";
+                   })
+                }
+                else{
+                  $('#child_cat_div').addClass('d-none');
+                  /*
+                  Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Please try again',
+                    text: response.msg,
+                    showConfirmButton: false,
+                    timer: 2000
+                    })
+                    */
+                }
+                $('#child_cat_id').html(html_option);
+              }
+           });
+        }
+      });
     </script>
  @endsection

@@ -32,7 +32,7 @@
               <tr>
                  <td> {{$loop->iteration}} </td>                
                  <td>{{$product->name}}</td>
-                  <td> <img src="{{$product->photo}}" alt="{{$product->name}}" title="{{$product->name}}" class="w-100 shadow-1-strong rounded mb-4"/></td>
+                  <td> <img src="{{$product->photo}}" alt="{{$product->name}}" title="{{$product->name}}" class="w-80 shadow-1-strong rounded mb-4"/></td>
                   <td>GHS {{number_format($product->cost_price + $product->markup_price, 2)}}</td>
                   <td>GHS {{number_format($product->discount, 2)}}</td>
                   <td>{{$product->item_size}}</td>
@@ -47,6 +47,7 @@
                   <input type="checkbox" data-toggle="switchbutton" name="toggle" value="{{$product->id}}" {{$product->status == 'active' ? 'checked' : ''}} data-onlabel="active" data-offlabel="inactive" data-size="sm" data-onstyle="success" data-offstyle="danger">
                 </td>
                 <td>
+                  <a href="javascript:void(0);" data-toggle="modal" data-target="#productID{{$product->id}}" data-toggle="tooltip" title="view details" class="float-left btn btn-outline-secondary btn-sm"  data-placement="bottom"><i class="fa fa-eye"></i></a>
                   <a href="{{route('product.edit', $product->id)}}" data-toggle="tooltip" title="edit" class="float-left btn btn-outline-warning btn-sm"  data-placement="bottom"><i class="fa fa-edit"></i></a>
                   <form class="float-left ml-1" action="{{route('product.destroy', $product->id)}}" method="post">
                       @csrf
@@ -54,6 +55,37 @@
                      <a href="" data-toggle="tooltip" title="delete"  data-id = "{{$product->id}}" class="dlbtn btn btn-outline-danger btn-sm"  data-placement="bottom"><i class="fa fa-trash"></i></a>
                   </form>
                 </td>
+
+
+                <!-- modal to show product details---->
+                  <!-- Button trigger modal -->
+                      <!-- Modal -->
+                      <div class="modal fade bd-example-modal-lg" id="productID{{$product->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            @php
+                              $product = \App\Models\Product::where('id', $product->id)->first();
+                            @endphp
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLongTitle">{{$product->name}}</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <strong>Summary:</strong>
+                              <p>{!! html_entity_decode($product->summary) !!}</p>
+                              <strong>Description:</strong>
+                              <p>{!! html_entity_decode($product->description) !!}</p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                <!-- end of modal to show product details--->
               </tr>
               @endforeach
             </tbody>

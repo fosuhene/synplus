@@ -36,7 +36,7 @@
                 <td>{!! html_entity_decode(substr($category->title, 0, 50))!!}</td>
                 <td>{!! html_entity_decode(substr($category->summary, 0, 10))!!}</td>  
                 <td>{{$category->is_parent === 1 ? 'Yes' : 'No'}}</td>
-                <td>{{\App\Models\Category::where('id', $category->parent_id)->value('title')}}</td>             
+                <td>{!! html_entity_decode(substr(\App\Models\Category::where('id', $category->parent_id)->value('title'), 0, 10))!!}</td>             
                 <td>
                   <input type="checkbox" data-toggle="switchbutton" name="toggle" value="{{$category->id}}" {{$category->status == 'active' ? 'checked' : ''}} data-onlabel="active" data-offlabel="inactive" data-size="sm" data-onstyle="success" data-offstyle="danger">
                 </td>

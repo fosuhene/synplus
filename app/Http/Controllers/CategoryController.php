@@ -116,7 +116,7 @@ class CategoryController extends Controller
         if($category){
             return view('backend.category.edit', compact(['category','parent_cats']));
         }else{
-            return back()->with('error', 'Data not found');
+            return back()->with('error', 'Category not found');
         }
     }
 
@@ -187,5 +187,24 @@ class CategoryController extends Controller
         }else{
             return back()->with('error', 'Data not found');
         }
+    }
+
+    public function getChildByParentID(Request $request, $id){
+
+            $category = Category::find($request->id);
+            
+            if($category){
+                $child_id = Category::getChildByParentID($request->id);
+
+                if(count($child_id) <= 0){
+                    return response()->json(['status' => false, 'data' => null, 'msg' => 'No record found']);
+                }
+                
+                return response()->json(['status' => true, 'data' => $child_id, 'msg' => 'selected']);
+            }
+            else{
+                return response()->json(['status' => false, 'data' => null, 'msg' => 'Category not found']);
+            }
+
     }
 }
